@@ -8,16 +8,16 @@
         [JsonProperty(PropertyName = "id")]
         public string Id { get; set; }
 
-        [JsonProperty(PropertyName = "name")]
-        public string Name { get; set; }
+        [JsonProperty(PropertyName = "FirstName")]
+        public string FirstName { get; set; }
 
-        [JsonProperty(PropertyName = "description")]
-        public string Description { get; set; }
+        [JsonProperty(PropertyName = "LastName")]
+        public string LastName { get; set; }
 
-        [JsonProperty(PropertyName = "isComplete")]
-        public bool Completed { get; set; }
+        [JsonProperty(PropertyName = "Age")]
+        public bool Age { get; set; }
 
-        [JsonProperty(PropertyName = "category")]
-        public string Category { get; set; }
+        [JsonProperty(PropertyName = "Hometown")]
+        public string Hometown { get; set; }
     }
 }

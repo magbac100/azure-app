@@ -10,7 +10,7 @@
         [ActionName("Index")]
         public async Task<ActionResult> IndexAsync()
         {
-            var items = await DocumentDBRepository<Item>.GetItemsAsync(d => !d.Completed);
+            var items = await DocumentDBRepository<Item>.GetItemsAsync(d => true);
             return View(items);
         }
 
@@ -25,7 +25,7 @@
         [HttpPost]
         [ActionName("Create")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> CreateAsync([Bind(Include = "Id,Name,Description,Completed,Category")] Item item)
+        public async Task<ActionResult> CreateAsync([Bind(Include = "id,FirstName,LastName,Age,Hometown")] Item item)
         {
             if (ModelState.IsValid)
             {
@@ -39,26 +39,26 @@
         [HttpPost]
         [ActionName("Edit")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditAsync([Bind(Include = "Id,Name,Description,Completed,Category")] Item item)
+        public async Task<ActionResult> EditAsync([Bind(Include = "id,FirstName,LastName,Age,Hometown")] Item User)
         {
             if (ModelState.IsValid)
             {
-                await DocumentDBRepository<Item>.UpdateItemAsync(item.Id, item);
+                await DocumentDBRepository<Item>.UpdateItemAsync(User.Id, User);
                 return RedirectToAction("Index");
             }
 
-            return View(item);
+            return View(User);
         }
 
         [ActionName("Edit")]
-        public async Task<ActionResult> EditAsync(string id, string category)
+        public async Task<ActionResult> EditAsync(string id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            Item item = await DocumentDBRepository<Item>.GetItemAsync(id, category);
+            Item item = await DocumentDBRepository<Item>.GetItemAsync(id,true);
             if (item == null)
             {
                 return HttpNotFound();
@@ -68,14 +68,14 @@
         }
 
         [ActionName("Delete")]
-        public async Task<ActionResult> DeleteAsync(string id, string category)
+        public async Task<ActionResult> DeleteAsync(string id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            Item item = await DocumentDBRepository<Item>.GetItemAsync(id, category);
+            Item item = await DocumentDBRepository<Item>.GetItemAsync(id,true);
             if (item == null)
             {
                 return HttpNotFound();
@@ -87,16 +87,16 @@
         [HttpPost]
         [ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirmedAsync([Bind(Include = "Id, Category")] string id, string category)
+        public async Task<ActionResult> DeleteConfirmedAsync([Bind(Include = "Id")] string id)
         {
-            await DocumentDBRepository<Item>.DeleteItemAsync(id, category);
+            await DocumentDBRepository<Item>.DeleteItemAsync(id);
             return RedirectToAction("Index");
         }
 
         [ActionName("Details")]
-        public async Task<ActionResult> DetailsAsync(string id, string category)
+        public async Task<ActionResult> DetailsAsync(string id)
         {
-            Item item = await DocumentDBRepository<Item>.GetItemAsync(id, category);
+            Item item = await DocumentDBRepository<Item>.GetItemAsync(id,true);
             return View(item);
         }
     }
