@@ -19,13 +19,13 @@ namespace todo
         private static readonly string CollectionId = ConfigurationManager.AppSettings["collection"];
         private static DocumentClient client;
 
-        public static async Task<T> GetItemAsync(string id, string category)
+        public static async Task<T> GetItemAsync(string id, bool age)
         {
             try
             {
                 Document document =
-                    await client.ReadDocumentAsync(UriFactory.CreateDocumentUri(DatabaseId, CollectionId, id),
-                        new RequestOptions() {PartitionKey = new PartitionKey(category)});
+                    await client.ReadDocumentAsync(UriFactory.CreateDocumentUri(DatabaseId, CollectionId, id));
+                        //new RequestOptions() {PartitionKey = new PartitionKey(id)});
                 return (T)(dynamic)document;
             }
             catch (DocumentClientException e)
@@ -58,9 +58,14 @@ namespace todo
             return results;
         }
 
-        public static async Task<Document> CreateItemAsync(T item)
+        internal static Task<Item> GetItemAsync(string id, string FirstName)
         {
-            return await client.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(DatabaseId, CollectionId), item);
+            throw new NotImplementedException();
+        }
+
+        public static async Task<Document> CreateItemAsync(T id)
+        {
+            return await client.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(DatabaseId, CollectionId), id);
         }
 
         public static async Task<Document> UpdateItemAsync(string id, T item)
@@ -68,10 +73,16 @@ namespace todo
             return await client.ReplaceDocumentAsync(UriFactory.CreateDocumentUri(DatabaseId, CollectionId, id), item);
         }
 
-        public static async Task DeleteItemAsync(string id, string category)
+        public static async Task DeleteItemAsync(string id)
         {
-            await client.DeleteDocumentAsync(UriFactory.CreateDocumentUri(DatabaseId, CollectionId, id), new RequestOptions(){PartitionKey = new PartitionKey(category)});
+            await client.DeleteDocumentAsync(UriFactory.CreateDocumentUri(DatabaseId, CollectionId, id));
+                //, new RequestOptions(){PartitionKey = new PartitionKey(id)});
         }
+
+       // internal static Task DeleteItemAsync(string id)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         public static void Initialize()
         {
